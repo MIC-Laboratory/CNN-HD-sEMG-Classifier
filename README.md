@@ -74,6 +74,8 @@ Data acquisition was conducted with
 | model_save | The directory path for saving the model      |    Any strings |
 | finetune | finetuning      |    true or false |
 | pretrain_model_path | The directory path for pretrain model weight      |    Any strings |
+
+
 Run the program by
 ```
 python train.py
