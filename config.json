@@ -1,18 +1,19 @@
 {
     
-    "Epoch":10,
-    "learning_rate":0.1,
-    "T_max":100,
+    "Epoch":200,
+    "learning_rate":3e-4,
+    "T_max":200,
     "input_width":8,
     "input_height":24,
     "batch_size":1000,
     "num_workers":4,
     "data_path":"data/Training_Trimmed", 
     "dataset":"ICE", 
-    "fold":3,
+    "fold":2,
     "channel":1,
     "weight_decay":3e-4,
-    "model_save":"model_save_folder",
+    "label_smoothing":0.1,
+    "model_save":"finetune",
     "finetune":true,
-    "pretrain_model_path":"model_save_folder"
+    "pretrain_model_path":"ICE_Lab/99.8158"
 }

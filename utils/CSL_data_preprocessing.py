@@ -44,5 +44,5 @@ class CSL_data_preprocessing:
         return data,label,num_class
 
     def NormalizeData(self,data):
-        data = (data - data.mean())/(data.std())
+        # data = (data - data.mean())/(data.std())
         return data

@@ -73,6 +73,19 @@ for fold in tqdm(range(config["fold"]),desc="Proessing K fold"):
 
 model = MobileNetV2(num_classes=training_dataset.num_classes,input_layer=training_dataset.channel)
 
+
+# Set the device to use (GPU if available, otherwise CPU)
+
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+model.to(device)
+# Define the optimizer, loss criterion, and scheduler
+
+optimizer = torch.optim.AdamW(model.parameters(), lr=config["learning_rate"],weight_decay=config["weight_decay"])
+criterion = nn.CrossEntropyLoss(label_smoothing=config["label_smoothing"])
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer,T_max=config["T_max"])
+model_orginal_weight = model.state_dict().copy()
+
+
 if config["finetune"]:
     model.load_state_dict(torch.load(config["pretrain_model_path"]))
     # frezze the first couple layer for funeting
@@ -82,17 +95,7 @@ if config["finetune"]:
         bn1_param.requires_grad = False
     for block0_param in model.layers[0].parameters():
         block0_param.requires_grad = False
-
-# Set the device to use (GPU if available, otherwise CPU)
-
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-model.to(device)
-
-# Define the optimizer, loss criterion, and scheduler
-
-optimizer = torch.optim.AdamW(model.parameters(), lr=config["learning_rate"],weight_decay=config["weight_decay"])
-criterion = nn.CrossEntropyLoss()
-scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer,T_max=config["T_max"])
+    model_orginal_weight = model.state_dict().copy()
 
 # Initialize variables to track the best accuracy achieved
 
@@ -213,14 +216,12 @@ for training_dataloader,testing_dataloader in zip(training_dataloaders,testing_d
     print(f"fold {fold} start")
     fold += 1
     # refresh the model weight
-    model = MobileNetV2(num_classes=training_dataset.num_classes,
-                        input_layer=training_dataset.channel)
+    model.load_state_dict(model_orginal_weight)
     for epoch in range(epochs):
         
         train_loss,train_acc = train(epoch,model,optimizer,criterion,training_dataloader)
         test_loss,test_acc = test(epoch,model,criterion,testing_dataloader)
-        train_acces.append(train_acc)
-        test_acces.append(test_acc)
+        
 
         if not os.path.isdir(config["model_save"]):
             os.makedirs(config["model_save"])
@@ -230,6 +231,8 @@ for training_dataloader,testing_dataloader in zip(training_dataloaders,testing_d
             
         scheduler.step()
         epoch+=1
+    train_acces.append(train_acc)
+    test_acces.append(test_acc)
 #Calculate the final average training and testing accuracies
 print(
     f"Final testing Acc:{sum(test_acces)/len(test_acces)} | Final training Acc:{sum(train_acces)/len(train_acces)}")

@@ -1,5 +1,5 @@
 # CNN-HD-sEMG-Classifier
-This is a project is about to use MobilenetV2 to classifify HD-sEMG. The project test on CSL-HD sEMG dataset and ICE Lab HD sEMG dataset
+The objective of this project is to utilize MobilenetV2 for the classification of HD-SEMG(High-Definition surface electromyography) data. The project involves testing the model ontwo distinct datasets: CSL-HD SEMG dataset and ICE Lab HD SEMG dataset
 ## Dependency
 - python=3.9
 - torchvision
@@ -14,7 +14,7 @@ This is a project is about to use MobilenetV2 to classifify HD-sEMG. The project
 conda env create -f environment.yml
 ```
 ## Dataset
-### CSL HD-sEMG Dataset
+### [CSL HD-sEMG Dataset](pdfs/CSL-HD-sEMG.pdf)
 #### Introduction
 - Cognitive Systems Lab (CSL) investigates the usefulness of inertial sensing (IMU) and electromyography (EMG) for the detection of gestures 
 - Inertial sensors detect movement through acceleration and yaw rate sensors
@@ -74,6 +74,7 @@ Data acquisition was conducted with
 | model_save | The directory path for saving the model      |    Any strings |
 | finetune | finetuning      |    true or false |
 | pretrain_model_path | The directory path for pretrain model weight      |    Any strings |
+| label_smoothing | Label smoothing is a regularization technique that can improve the generalization and robustness of a model by preventing it from becoming overly confident or overfitting to the training data.      |    A float in [0.0, 1.0] |
 
 
 Run the program by
