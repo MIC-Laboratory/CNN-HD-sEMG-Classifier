@@ -40,11 +40,41 @@ One of those gestures is an “idle” gesture, which was repeated for 30 trials
 - Electrodes 8, 16, ..., 192 are located on the distal end
 
 ### ICE Lab Dataset
-
+Data acquisition was conducted with 
+- The OT Bioelettronica’s Quattrocento amplifier
+- 2560 samples per second with three surface EMG electrode grids 
+- Placed on the subject’s dominate forearm with 10mm spacing in an 8 by 8 arrangement, 
+- Total with 192 channels. 
+- The dataset includes Seven hand and wrist gestures
+    - no movement
+    - wrist supination
+    - wrist pronation
+    - hand close
+    - hand open
+    - wrist flexion
+    - wrist extension
 
 
 ## Quick Start
-The config file controls all the hyper parameters and data path of the training program, feel free to modify it. 
+### Configuration
+| Setting        | Description           | Options  |
+| ------------- |:-------------:| -----:|
+| Epoch      | Training Epochs | Any integers |
+| learning_rate      | Optmizer learning rate, default is 3e-4 for AdamW optimizer    |   Any integers or floats |
+| T_max | Maximum number of iterations. Usually is the same number as epoch      |    Any integers |
+| input_width | The input image width. The mutiplication of the width and the height should equal to 192      |    Any integers |
+| input_height | The input image height. The mutiplication of the width and the height should equal to 192      |    Any integers |
+| channel | The input channel, this option usually is 1 for sEMG data. For Image data usually is 3 because image has R,G,B three channels.      |    Any integers |
+| batch_size | A number of samples in one batch. Reduce this number if occur memory issue      |    Any integers |
+| num_workers | Number of threads      |    Any integers |
+| data_path | The relative/absolute directory path for the data.       |    Any strings |
+| dataset | The name of datasets      |    "CSL" or "ICE" |
+| fold | number of fold for K fold validation      |    Any integer |
+| weight_decay | Weight decay coefficient for optimizer. Weight decay improves the generalization performance of a machine learning model by preventing overfitting      |    Any integers or floats |
+| model_save | The directory path for saving the model      |    Any strings |
+| finetune | finetuning      |    true or false |
+| pretrain_model_path | The directory path for pretrain model weight      |    Any strings |
+Run the program by
 ```
 python train.py
 ```

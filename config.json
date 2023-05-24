@@ -7,11 +7,12 @@
     "input_height":24,
     "batch_size":1000,
     "num_workers":4,
-    "data_path":"data/CSL-HDEMG/subject1/session1", 
-    "dataset":"CSL", 
+    "data_path":"data/Training_Trimmed", 
+    "dataset":"ICE", 
     "fold":3,
     "channel":1,
     "weight_decay":3e-4,
-    "model_save":"model_save_folder"
-
+    "model_save":"model_save_folder",
+    "finetune":true,
+    "pretrain_model_path":"model_save_folder"
 }

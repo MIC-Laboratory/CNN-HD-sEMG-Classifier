@@ -28,12 +28,14 @@ if config["dataset"] == "CSL":
     root = (data, label, num_classes)
 elif config["dataset"] == "ICE":
     # Import the necessary modules for ICE dataset
-
     from data_preprocessing.ICE_Lab_dataset import ICE_Lab_dataset as dataset
+    from utils.ICE_lab_data_preprocessing import ICE_lab_data_preprocessing as utils
+
+    # Extract additional data, labels, and number of classes using ICE data preprocessing utility
+    data,label,num_classes = utils().extra_data(config["data_path"])
 
     # Assign the data path from 'config' to 'root' for further usage
-
-    root = config["data_path"]
+    root = (data, label, num_classes)
 else:
 
     # Raise an exception if the specified dataset in 'config' is not implemented
@@ -70,6 +72,16 @@ for fold in tqdm(range(config["fold"]),desc="Proessing K fold"):
 # Initialize the MobileNetV2 model
 
 model = MobileNetV2(num_classes=training_dataset.num_classes,input_layer=training_dataset.channel)
+
+if config["finetune"]:
+    model.load_state_dict(torch.load(config["pretrain_model_path"]))
+    # frezze the first couple layer for funeting
+    for conv1_param in model.conv1.parameters():
+        conv1_param.requires_grad = False
+    for bn1_param in model.bn1.parameters():
+        bn1_param.requires_grad = False
+    for block0_param in model.layers[0].parameters():
+        block0_param.requires_grad = False
 
 # Set the device to use (GPU if available, otherwise CPU)
 

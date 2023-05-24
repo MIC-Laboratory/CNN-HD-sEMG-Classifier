@@ -8,7 +8,7 @@ class ICE_Lab_dataset(Dataset):
     Initialize the ICE_Lab_dataset class.
 
     Args:
-        root (str): Root directory of the dataset.
+        root (tuple): Tuple containing data, label, and num_classes.
         width (int): Width of the data.
         height (int): Height of the data.
         train (bool): Flag indicating whether to use training or testing data.
@@ -25,6 +25,9 @@ class ICE_Lab_dataset(Dataset):
         data (numpy.ndarray): The loaded data from the dataset.
         label (numpy.ndarray): The corresponding labels for the data.
         num_classes (int): The number of classes in the dataset.
+        
+        Raises:
+        AssertionError: If fold_order is greater than or equal to fold.
     """
     def __init__(self, root,width=8,height=24,train=False,channel=1,fold=2,fold_order=1):
         
@@ -34,7 +37,7 @@ class ICE_Lab_dataset(Dataset):
         self.width = width
         self.height = height
         self.utils = utils()
-        self.data, self.label, self.num_classes = self.utils.extra_data(root)
+        self.data, self.label, self.num_classes = root[0],root[1],root[2]
         
         # Shuffle the data and label indexes
         data_indexes = self.data.shape[0] #self.data.shape = (1228800, 192)
