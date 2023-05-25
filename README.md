@@ -22,27 +22,31 @@ In this implementation, we process the 192 channels of HD-sEMG data into an 8 by
         - wrist extension
 
 
-### [CSL HD-sEMG Dataset](pdfs/CSL-HD-sEMG.pdf)
-#### Introduction
-- [Cognitive Systems Lab (CSL)](https://www.uni-bremen.de/csl/)  investigates the usefulness of inertial sensing (IMU) and electromyography (EMG) for the detection of gestures 
-- Inertial sensors detect movement through acceleration and yaw rate sensors
-- The group’s site provides two sets of data
-    - mmGest - IMU and EMG data from 5 different subjects in 5 separate sessions
-    - csl-hdemg - high-density EMG recordings of finger movements
-#### Overview of Data
-- EMG data for 5 subjects
-- Each subject performed 5 sessions recorded on different days
+### CSL HD-sEMG Dataset
+-  Introduction
+    - [Cognitive Systems Lab (CSL)](https://www.uni-bremen.de/csl/)  investigates the usefulness of inertial sensing (IMU) and electromyography (EMG) for the detection of gestures 
+    - Inertial sensors detect movement through acceleration and yaw rate sensors
+    - The group’s site provides two sets of data
+        - [mmGest](https://www.csl.uni-bremen.de/cms/images/documents/publications/GeorgiAmmaSchultz_RecognizingHandAndFingerGesturesWithIMUBasedMotionAndEMGBasedMuscleActivitySensing.pdf) - IMU and EMG data from 5 different subjects in 5 separate sessions
+        - [csl-hdemg](pdfs/CSL-HD-sEMG.pdf) - high-density EMG recordings of finger movements
+- Data Collection
+    - EMG data for 5 subjects
+    - Each subject performed 5 sessions recorded on different days
 27 gestures in each gesture set, 10 trials for each gesture per session
 One of those gestures is an “idle” gesture, which was repeated for 30 trials
-- Sampling Rate - 2048 Hz
-- Data saved in a 192 x N matrix
-- Every row is a channel
+    - Sampling Rate - 2048 Hz
+    - Data saved in a 192 x N matrix
+    - Every row is a channel
+![Data Collection](images/Figure3.png)
+*Sensor Placement images from CSL-HD sEMG paper*
 #### Electrodes
 - Every 8th channel does not contain meaningful data due to differential amplification in the bipolar recordings and should be ignored
 1st channel is the differential signal of electrodes 1 and 2, 2nd channel is the differential channel of electrodes 2 and 3, etc ...
 - Bipolar electrode arrangement with differential amplifier
 - Suppresses signals common to two electrodes
 - Essentially, differential amplification subtracts the potential voltage at one electrode with the potential voltage at another and then amplifies the difference
+![Electrodes](images/Figure2.png)
+*Electrodes array images from CSL-HD sEMG paper*
 #### Electrodes Placement
 - Electrodes 1, 9, 17, ..., 185 are located near the proximal end
 - Electrodes 8, 16, ..., 192 are located on the distal end
@@ -70,8 +74,9 @@ One of those gestures is an “idle” gesture, which was repeated for 30 trials
 | finetune | finetuning      |    true or false |
 | pretrain_model_path | The directory path for pretrain model weight      |    Any strings |
 | label_smoothing | Label smoothing is a regularization technique that can improve the generalization and robustness of a model by preventing it from becoming overly confident or overfitting to the training data.      |    A float in [0.0, 1.0] |
+| model_width | Mobilenet block expansion radio, the less he number, the lower the computation and storage usuage       |    A float in [0.0, 1.0] |
 
-#### Dependency
+### Dependency
 - python=3.9
 - torchvision
 - pytorch-cuda=11.8
@@ -81,11 +86,11 @@ One of those gestures is an “idle” gesture, which was repeated for 30 trials
 - scikit-learn
 - tqdm
 
-#### Quick dependency installation
+### Quick dependency installation
 ```
 conda env create -f environment.yml
 ```
-Start training
+### Start training
 ```
 python train.py
 ```
@@ -95,3 +100,21 @@ python test.py
 ``` -->
 
 <!-- ## Experiment Result -->
+
+## Experiment Result
+### Ice Lab Dataset
+| Experiment Settings        | Network Config           | Accuracy  |
+| ------------- |:-------------:| -----:|
+| Training on Clean Data <br/>Testing on Clean Data      | Parameters:2.314M<br/>  MAC:18.303M  | 99.026 |
+| Training on Clean Data <br/>Testing on Clean Data      | Parameters:1.430M<br/>  MAC:10.419M  | 98.579 |
+| Training on Clean Data <br/>Testing on Clean Data      | Parameters:1.110M<br/>  MAC:7.632M  | 98.038 |
+| Training on Clean Data <br/>Testing on Clean Data      | Parameters:1.052M<br/>  MAC:6.924M  | 98.124 |
+
+## Relative Project
+[Toward Robust High-Density EMG Pattern Recognition using Generative Adversarial Network and Convolutional Neural Network Implementation](https://github.com/MIC-Laboratory/IEEE-NER-2023-RoHDE) (IEEE NER'23)
+
+
+[EffiE: Efficient Convolutional Neural Network for Real-Time EMG Pattern Recognition System on Edge Devices](https://github.com/MIC-Laboratory/IEEE-NER-2023-EffiE) (IEEE NER'23)
+
+
+[Real-time Bionic Arm Control Via CNN-based sEMG Recognition](https://github.com/MIC-Laboratory/Real-time-Bionic-Arm-Control-via-CNN-on-Sony-Spresense) (Sony Spresense Developer Challenge 2022 Grand Price)

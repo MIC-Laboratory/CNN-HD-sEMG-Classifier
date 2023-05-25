@@ -13,7 +13,7 @@
     "channel":1,
     "weight_decay":3e-4,
     "label_smoothing":0.1,
-    "model_save":".",
+    "model_save":"pretrain_model",
     "finetune":false,
     "pretrain_model_path":""
 }

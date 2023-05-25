@@ -4,6 +4,8 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 from data_preprocessing import ICE_Lab_dataset
 from models.mobilenetv2 import MobileNetV2
+from thop import profile
+from thop import clever_format
 
 import torch
 import torch.nn as nn
@@ -71,8 +73,11 @@ for fold in tqdm(range(config["fold"]),desc="Proessing K fold"):
 
 # Initialize the MobileNetV2 model
 
-model = MobileNetV2(num_classes=training_dataset.num_classes,input_layer=training_dataset.channel)
-
+model = MobileNetV2(num_classes=training_dataset.num_classes,input_layer=training_dataset.channel,model_width=config["model_width"])
+# Calculating the flops and parameters for the model
+input = torch.randn(1, 1, 8, 24)
+macs, params = profile(model, inputs=(input, ))
+macs, params = clever_format([macs, params], "%.3f")
 
 # Set the device to use (GPU if available, otherwise CPU)
 
@@ -227,7 +232,7 @@ for training_dataloader,testing_dataloader in zip(training_dataloaders,testing_d
             os.makedirs(config["model_save"])
         if test_acc > best_acc:
             best_acc = test_acc
-            torch.save(model.state_dict(),f"{config['model_save']}/{best_acc}")
+            torch.save(model.state_dict(),f"{config['model_save']}/MobilenetV2_Params@{params}_MAC@{macs}_Acc@{best_acc:.3f}.pt")
             
         scheduler.step()
         epoch+=1

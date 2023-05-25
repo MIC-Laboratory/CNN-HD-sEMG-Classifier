@@ -47,8 +47,9 @@ class MobileNetV2(nn.Module):
            (6, 160, 3, 2),
            (6, 320, 1, 1)]
 
-    def __init__(self, num_classes=10,input_layer = 3):
+    def __init__(self, num_classes=10,input_layer = 3,model_width=1):
         super(MobileNetV2, self).__init__()
+        self.model_width = model_width
         # NOTE: change conv1 stride 2 -> 1 for CIFAR10
         self.conv1 = nn.Conv2d(input_layer, 32, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(32)
@@ -63,7 +64,11 @@ class MobileNetV2(nn.Module):
         for expansion, out_planes, num_blocks, stride in self.cfg:
             strides = [stride] + [1]*(num_blocks-1)
             for stride in strides:
-                layers.append(Block(in_planes, out_planes, expansion, stride))
+                if expansion != 1:
+                    custom_expansion = int(expansion * self.model_width)
+                else:
+                    custom_expansion = expansion
+                layers.append(Block(in_planes, out_planes, custom_expansion, stride))
                 in_planes = out_planes
         return nn.Sequential(*layers)
 
