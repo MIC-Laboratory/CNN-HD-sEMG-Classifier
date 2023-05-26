@@ -92,7 +92,7 @@ model_orginal_weight = model.state_dict().copy()
 
 
 if config["finetune"]:
-    model.load_state_dict(torch.load(config["pretrain_model_path"]))
+    model.load_state_dict(torch.load(config["pretrain_model_path"]),strict=False)
     # frezze the first couple layer for funeting
     for conv1_param in model.conv1.parameters():
         conv1_param.requires_grad = False
