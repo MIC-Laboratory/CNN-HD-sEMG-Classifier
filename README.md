@@ -1,6 +1,7 @@
 # CNN-HD-sEMG-Classifier
-![Figure 1](images/Figure1.png)
-
+<p align="center">
+<img src="images/Figure1.png" width=70%>
+<p>
 This is an implementation of gesture recognition using a light weight convolutional neural network (CNN) - MobilenetV2. The recognition is based on high-density surface electromyography (HD-sEMG) signals from two datasets: CSL HD-sEMG and ICE Lab HD-sEMG.
 
 In this implementation, we process the 192 channels of HD-sEMG data into an 8 by 24 image to fed into the neural network for classification.
@@ -47,8 +48,10 @@ One of those gestures is an “idle” gesture, which was repeated for 30 trials
 - Essentially, differential amplification subtracts the potential voltage at one electrode with the potential voltage at another and then amplifies the difference
 
 
-![Electrodes](images/Figure2.png)
-*Electrodes array images from CSL-HD sEMG paper*[[1]](#1)
+    ![Electrodes](images/Figure2.png)
+
+
+    *Electrodes array images from CSL-HD sEMG paper*[[1]](#1)
 #### Electrodes Placement
 - Electrodes 1, 9, 17, ..., 185 are located near the proximal end
 - Electrodes 8, 16, ..., 192 are located on the distal end
@@ -105,7 +108,7 @@ python test.py
 
 ## Experiment Result
 ### Ice Lab Dataset
-| Network Config        |Parameters |      MACs     | Accuracy  |
+| Network Config        |Parameters (M) |      MACs (M)    | Accuracy (%)  |
 | ------------- |:-------------:| -----:|----:|
 | Model Width: 1      | 2.314M |  18.303M  | 99.197 |
 | Model Width: 0.7      | 1.712M |  12.967M  | 98.856 |
