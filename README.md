@@ -40,6 +40,9 @@ One of those gestures is an “idle” gesture, which was repeated for 30 trials
     - Every row is a channel
 ![Data Collection](images/Figure3.png)
 *Sensor Placement images from CSL-HD sEMG paper*[[1]](#1)
+
+
+        *Picture of the actual setup used: (1) electrode array, (2) preamplifier, (3) Reference electrode, (4) DRL circuit, (5) data glove (not used), (6) real-time signal visualization, (7) guiding software, (8) amplifier, (9) recording computer*
 #### Electrodes
 - Every 8th channel does not contain meaningful data due to differential amplification in the bipolar recordings and should be ignored
 1st channel is the differential signal of electrodes 1 and 2, 2nd channel is the differential channel of electrodes 2 and 3, etc ...
