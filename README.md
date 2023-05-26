@@ -38,7 +38,7 @@ One of those gestures is an “idle” gesture, which was repeated for 30 trials
     - Data saved in a 192 x N matrix
     - Every row is a channel
 ![Data Collection](images/Figure3.png)
-*Sensor Placement images from CSL-HD sEMG paper*
+*Sensor Placement images from CSL-HD sEMG paper*[[1]](#1)
 #### Electrodes
 - Every 8th channel does not contain meaningful data due to differential amplification in the bipolar recordings and should be ignored
 1st channel is the differential signal of electrodes 1 and 2, 2nd channel is the differential channel of electrodes 2 and 3, etc ...
@@ -48,7 +48,7 @@ One of those gestures is an “idle” gesture, which was repeated for 30 trials
 
 
 ![Electrodes](images/Figure2.png)
-*Electrodes array images from CSL-HD sEMG paper*
+*Electrodes array images from CSL-HD sEMG paper*[[1]](#1)
 #### Electrodes Placement
 - Electrodes 1, 9, 17, ..., 185 are located near the proximal end
 - Electrodes 8, 16, ..., 192 are located on the distal end
@@ -120,3 +120,7 @@ python test.py
 
 
 [Real-time Bionic Arm Control Via CNN-based sEMG Recognition](https://github.com/MIC-Laboratory/Real-time-Bionic-Arm-Control-via-CNN-on-Sony-Spresense) (Sony Spresense Developer Challenge 2022 Grand Price)
+
+## References
+<a id="1">[1]</a> 
+Amma, C., Krings, T., Böer, J. and Schultz, T., 2015, April. Advancing muscle-computer interfaces with high-density electromyography. *In Proceedings of the 33rd Annual ACM Conference on Human Factors in Computing Systems* (pp. 929-938).
