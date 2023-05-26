@@ -16,5 +16,5 @@
     "model_save":"pretrain_model",
     "finetune":false,
     "pretrain_model_path":".",
-    "model_width":0.4
+    "model_width":0.2
 }

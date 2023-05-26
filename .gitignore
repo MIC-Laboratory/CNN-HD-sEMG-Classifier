@@ -5,7 +5,7 @@ __pycache__/
 
 # data
 data/*
-
+!data/sEMG_Test_Label_0.mat
 # C extensions
 *.so
 

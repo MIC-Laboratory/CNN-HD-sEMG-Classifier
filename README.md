@@ -45,6 +45,8 @@ One of those gestures is an “idle” gesture, which was repeated for 30 trials
 - Bipolar electrode arrangement with differential amplifier
 - Suppresses signals common to two electrodes
 - Essentially, differential amplification subtracts the potential voltage at one electrode with the potential voltage at another and then amplifies the difference
+
+
 ![Electrodes](images/Figure2.png)
 *Electrodes array images from CSL-HD sEMG paper*
 #### Electrodes Placement
@@ -90,25 +92,25 @@ One of those gestures is an “idle” gesture, which was repeated for 30 trials
 ```
 conda env create -f environment.yml
 ```
-### Start training
+### Training from scratch
 ```
 python train.py
 ```
-<!-- Start testing
+### Testing sEMG data with label of 0
 ```
 python test.py
-``` -->
+```
 
 <!-- ## Experiment Result -->
 
 ## Experiment Result
 ### Ice Lab Dataset
-| Experiment Settings        | Network Config           | Accuracy  |
-| ------------- |:-------------:| -----:|
-| Training on Clean Data <br/>Testing on Clean Data      | Parameters:2.314M<br/>  MAC:18.303M  | 99.026 |
-| Training on Clean Data <br/>Testing on Clean Data      | Parameters:1.430M<br/>  MAC:10.419M  | 98.579 |
-| Training on Clean Data <br/>Testing on Clean Data      | Parameters:1.110M<br/>  MAC:7.632M  | 98.038 |
-| Training on Clean Data <br/>Testing on Clean Data      | Parameters:1.052M<br/>  MAC:6.924M  | 98.124 |
+| Network Config        |Parameters |      MACs     | Accuracy  |
+| ------------- |:-------------:| -----:|----:|
+| Model Width: 1      | 2.314M |  18.303M  | 99.197 |
+| Model Width: 0.7      | 1.712M |  12.967M  | 98.856 |
+| Model Width: 0.4      | 1.110M |  7.632M  | 97.924 |
+| Model Width: 0.2      | 0.8K |  4.964M  | 97.252 |
 
 ## Relative Project
 [Toward Robust High-Density EMG Pattern Recognition using Generative Adversarial Network and Convolutional Neural Network Implementation](https://github.com/MIC-Laboratory/IEEE-NER-2023-RoHDE) (IEEE NER'23)
