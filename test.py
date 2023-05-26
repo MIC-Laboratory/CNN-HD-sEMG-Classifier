@@ -2,6 +2,16 @@ import torch
 import scipy.io
 from models.mobilenetv2 import MobileNetV2
 
+classes = {
+    0:"Hand Close",
+    1:"No Movement",
+    2:"Hand Open",
+    3:"Wrist Supination",
+    4:"Wrist Pronation",
+    5:"Wrist Extension",
+    6:"Wrist Flexion",
+    7:"N/A"
+}
 # Create an instance of the MobileNetV2 model with specified parameters
 model = MobileNetV2(num_classes=8, input_layer=1, model_width=1)
 
@@ -12,7 +22,7 @@ model.load_state_dict(torch.load("pretrain_model/MobilenetV2_Params@2.314M_MAC@1
 model.eval()
 
 # Load input data from a MATLAB file
-input_data = scipy.io.loadmat("data/sEMG_Test_Label_0.mat")['Data']
+input_data = scipy.io.loadmat("data/sEMG_Test_Label_hand_close.mat")['Data']
 
 # Convert the input data to a PyTorch tensor
 input_data = torch.asarray(input_data)
@@ -25,7 +35,7 @@ input_data = (input_data - input_data.mean()) / input_data.std()
 
 # Disable gradient calculation since we're only doing inference
 with torch.no_grad():
-    print(f"Number of Input sEMG samples:{input_data.shape[0]}, Labels for those samples are 0's")
+    print(f"Number of Input sEMG samples:{input_data.shape[0]}, Labels for those samples are Hand Close")
     # Pass the input data through the model
     outputs = model(input_data)
     # Count the number of occurrences of the most frequent output class

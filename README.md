@@ -14,13 +14,13 @@ In this implementation, we process the 192 channels of HD-sEMG data into an 8 by
     - The subject perfrmed the 7 gesture in sequence 5 times. Each gesture was performed for 5 seconds.
 - Gestures
     - This dataset include 7 hand and wrist gestures
+        - hand close, 
         - No movement, 
+        - hand open, 
         - wrist supination, 
         - wrist pronation, 
-        - hand close, 
-        - hand open, 
-        - wrist flexion, 
         - wrist extension
+        - wrist flexion, 
 
 
 ### CSL HD-sEMG Dataset
@@ -100,7 +100,7 @@ conda env create -f environment.yml
 ```
 python train.py
 ```
-### Testing sEMG data with label of 0
+### sEMG Data for Hand Close Gesture Testing
 ```
 python test.py
 ```
