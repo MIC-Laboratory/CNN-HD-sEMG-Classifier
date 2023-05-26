@@ -46,11 +46,7 @@ One of those gestures is an “idle” gesture, which was repeated for 30 trials
 - Bipolar electrode arrangement with differential amplifier
 - Suppresses signals common to two electrodes
 - Essentially, differential amplification subtracts the potential voltage at one electrode with the potential voltage at another and then amplifies the difference
-
-
-    ![Electrodes](images/Figure2.png)
-
-
+    ![Electrodes](images/Figure2.png)  
     *Electrodes array images from CSL-HD sEMG paper*[[1]](#1)
 #### Electrodes Placement
 - Electrodes 1, 9, 17, ..., 185 are located near the proximal end
