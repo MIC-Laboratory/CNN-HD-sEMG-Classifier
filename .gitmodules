@@ -1,0 +1,3 @@
+[submodule "onnx-tensorflow"]
+	path = onnx-tensorflow
+	url = https://github.com/onnx/onnx-tensorflow.git
