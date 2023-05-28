@@ -13,10 +13,10 @@ classes = {
     7:"N/A"
 }
 # Create an instance of the MobileNetV2 model with specified parameters
-model = MobileNetV2(num_classes=8, input_layer=1, model_width=1)
+model = MobileNetV2(num_classes=8, input_layer=1, model_width=0.2)
 
 # Load the pre-trained model weights
-model.load_state_dict(torch.load("pretrain_model/MobilenetV2_Params@2.314M_MAC@18.303M_Acc@99.197.pt"), strict=False)
+model.load_state_dict(torch.load("pretrain_model/MobilenetV2_Params@797.096K_MAC@4.555M_Acc@97.912.pt"), strict=False)
 
 # Set the model to evaluation mode
 model.eval()

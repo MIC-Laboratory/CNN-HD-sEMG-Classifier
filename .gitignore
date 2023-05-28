@@ -5,10 +5,11 @@ __pycache__/
 
 # data
 data/*
-!data/sEMG_Test_Label_0.mat
-
+!data/sEMG_Test_Label_hand_close.mat
+*.npy
+*.csv
 #test jupyternotebook
-*.ipynb
+
 # C extensions
 *.so
 
