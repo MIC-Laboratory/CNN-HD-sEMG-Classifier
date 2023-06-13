@@ -1,6 +1,6 @@
 import torch
 import scipy.io
-from models.mobilenetv2 import MobileNetV2
+from models.mobilenetv1 import MobilenetV1
 
 classes = {
     0:"Hand Close",
@@ -13,10 +13,11 @@ classes = {
     7:"N/A"
 }
 # Create an instance of the MobileNetV2 model with specified parameters
-model = MobileNetV2(num_classes=8, input_layer=1, model_width=0.2)
+model = MobilenetV1(ch_in=1,n_classes=8)
 
 # Load the pre-trained model weights
-model.load_state_dict(torch.load("pretrain_model/MobilenetV2_Params@797.096K_MAC@4.555M_Acc@97.912.pt"), strict=False)
+model.load_state_dict(torch.load(
+    "pretrain_model/MobilenetV1_Param@29.29 k _MAC@233.1 KMac_Acc@95.346.pt"))
 
 # Set the model to evaluation mode
 model.eval()
