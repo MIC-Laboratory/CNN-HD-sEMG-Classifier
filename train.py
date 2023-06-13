@@ -3,10 +3,9 @@
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from data_preprocessing import ICE_Lab_dataset
-from models.mobilenetv2 import MobileNetV2
-from thop import profile
-from thop import clever_format
-
+# from models.mobilenetv2 import MobileNetV2
+from models.mobilenetv1 import MobilenetV1
+from ptflops import get_model_complexity_info
 import torch
 import torch.nn as nn
 import os
@@ -71,18 +70,25 @@ for fold in tqdm(range(config["fold"]),desc="Proessing K fold"):
     training_dataloaders.append(training_dataloader)
     testing_dataloaders.append(testing_dataloader)
 
-# Initialize the MobileNetV2 model
-
-model = MobileNetV2(num_classes=training_dataset.num_classes,input_layer=training_dataset.channel,model_width=config["model_width"])
-# Calculating the flops and parameters for the model
-input = torch.randn(1, 1, 8, 24)
-macs, params = profile(model, inputs=(input, ))
-macs, params = clever_format([macs, params], "%.3f")
+# Initialize the MobileNetV1 model
+model = MobilenetV1(ch_in=training_dataset.channel,
+                    n_classes=training_dataset.num_classes)
+# model = MobileNetV2(input_layer=training_dataset.channel,num_classes=training_dataset.num_classes,model_width=config["model_width"])
 
 # Set the device to use (GPU if available, otherwise CPU)
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 model.to(device)
+# Calculating the flops and parameters for the model
+
+with device:
+  macs, params = get_model_complexity_info(model, (1, 8, 24), as_strings=True,
+                                           print_per_layer_stat=False, verbose=False)
+  macs = '{:<8}'.format( macs)
+  params = '{:<8}'.format( params)
+
+
+
 # Define the optimizer, loss criterion, and scheduler
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=config["learning_rate"],weight_decay=config["weight_decay"])
@@ -232,7 +238,7 @@ for training_dataloader,testing_dataloader in zip(training_dataloaders,testing_d
             os.makedirs(config["model_save"])
         if test_acc > best_acc:
             best_acc = test_acc
-            torch.save(model.state_dict(),f"{config['model_save']}/MobilenetV2_Params@{params}_MAC@{macs}_Acc@{best_acc:.3f}.pt")
+            torch.save(model.state_dict(),f"{config['model_save']}/MobilenetV1_Param@{params}_MAC@{macs}_Acc@{best_acc:.3f}.pt")
             
         scheduler.step()
         epoch+=1
