@@ -1,3 +1,9 @@
 [submodule "onnx-tensorflow"]
 	path = onnx-tensorflow
 	url = https://github.com/onnx/onnx-tensorflow.git
+[submodule "tflite-tools"]
+	path = tflite-tools
+	url = https://github.com/eliberis/tflite-tools.git
+[submodule "onnx2keras"]
+	path = onnx2keras
+	url = https://github.com/gmalivenko/onnx2keras.git
