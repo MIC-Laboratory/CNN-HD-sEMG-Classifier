@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 from torchsummary import summary
 import math
-class MobileNetV1(nn.Module):
+class MobilenetV1(nn.Module):
     def __init__(self, ch_in, n_classes,Global_ratio):
-        super(MobileNetV1, self).__init__()
+        super(MobilenetV1, self).__init__()
         self.Global_ratio = Global_ratio
         def conv_bn(inp, oup, stride):
             oup = math.trunc(oup*self.Global_ratio)+1 if math.trunc(oup*self.Global_ratio) == 0 else math.trunc(oup*self.Global_ratio)
