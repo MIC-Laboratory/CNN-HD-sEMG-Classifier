@@ -72,7 +72,8 @@ for fold in tqdm(range(config["fold"]),desc="Proessing K fold"):
 
 # Initialize the MobileNetV1 model
 model = MobilenetV1(ch_in=training_dataset.channel,
-                    n_classes=training_dataset.num_classes)
+                    n_classes=training_dataset.num_classes,
+                    model_width=config["model_width"])
 # model = MobileNetV2(input_layer=training_dataset.channel,num_classes=training_dataset.num_classes,model_width=config["model_width"])
 
 # Set the device to use (GPU if available, otherwise CPU)
