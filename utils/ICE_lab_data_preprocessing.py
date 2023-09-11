@@ -14,7 +14,7 @@ class ICE_lab_data_preprocessing:
         Returns:
             numpy.ndarray: The data stored under the key 'Data' in the MATLAB file.
         """
-        return scipy.io.loadmat(fileAddress)['data']
+        return scipy.io.loadmat(fileAddress)['Data']
 
     def extra_data(self,fileAddress):
         """
