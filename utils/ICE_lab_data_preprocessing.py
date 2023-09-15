@@ -31,7 +31,7 @@ class ICE_lab_data_preprocessing:
         label = None
         num_class = 8
         for gest in tqdm(range(1,num_class+1),desc="Processing Files"):
-            for i in tqdm(range(1,6),desc="Processing Files"):
+            for i in tqdm(range(1,5),desc="Processing Files"):
                 if data is None:
                     data = self.load_from_mat(f"{fileAddress}/001-00{gest}-00{i}.mat")
                     label = np.repeat(gest-1,data.shape[0])

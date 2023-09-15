@@ -1,13 +1,13 @@
 {
     
-    "Epoch":5,
+    "Epoch":15,
     "learning_rate":3e-4,
     "T_max":5,
     "input_width":8,
     "input_height":24,
     "batch_size":1000,
-    "num_workers":4,
-    "data_path":"data/training_data", 
+    "num_workers":0,
+    "data_path":"data/Training_Trimmed", 
     "dataset":"ICE", 
     "fold":1,
     "channel":1,

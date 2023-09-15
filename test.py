@@ -13,17 +13,17 @@ classes = {
     7:"N/A"
 }
 # Create an instance of the MobileNetV2 model with specified parameters
-model = MobilenetV1(ch_in=1,n_classes=8)
+model = MobilenetV1(ch_in=1,n_classes=8,Global_ratio=0.4)
 
 # Load the pre-trained model weights
 model.load_state_dict(torch.load(
-    "pretrain_model/MobilenetV1_Param@29.29 k _MAC@233.1 KMac_Acc@95.346.pt"))
+    "pretrain_model/MobilenetV1_Param@529.28 k_MAC@903.38 KMac_Acc@96.332.pt"))
 
 # Set the model to evaluation mode
 model.eval()
 
 # Load input data from a MATLAB file
-input_data = scipy.io.loadmat("data/sEMG_Test_Label_hand_close.mat")['Data']
+input_data = scipy.io.loadmat("data/Training_Trimmed/001-005-005.mat")['Data']
 
 # Convert the input data to a PyTorch tensor
 input_data = torch.asarray(input_data)
@@ -40,8 +40,8 @@ with torch.no_grad():
     # Pass the input data through the model
     outputs = model(input_data)
     # Count the number of occurrences of the most frequent output class
-    output_count = (outputs.topk(1).indices.reshape(-1) == 0).sum(dim=0).item()
-
+    output_count = (outputs.topk(1).indices.reshape(-1) == 4).sum(dim=0).item()
+    # print(outputs.topk(1).indices.reshape(-1))
     # Get the total number of outputs
     total = input_data.shape[0]
 

@@ -82,11 +82,11 @@ device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 model.to(device)
 # Calculating the flops and parameters for the model
 
-with device:
-  macs, params = get_model_complexity_info(model, (1, 8, 24), as_strings=True,
-                                           print_per_layer_stat=False, verbose=False)
-  macs = '{:<8}'.format( macs)
-  params = '{:<8}'.format( params)
+
+macs, params = get_model_complexity_info(model, (1, 8, 24), as_strings=True,
+                                        print_per_layer_stat=False, verbose=False)
+macs = '{:<8}'.format( macs)
+params = '{:<8}'.format( params)
 
 
 

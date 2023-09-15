@@ -37,7 +37,7 @@ class CSL_dataset(Dataset):
         self.data = self.data[data_indexes_list]
         self.label = self.label[data_indexes_list]
         
-        # Split the data and label based on the fold_order
+        # # Split the data and label based on the fold_order
         fold_nodes = [i*(data_indexes//(fold+1)) for i in range(fold+1)]
         if train:
             # Concatenate the data and label from the specified fold_order

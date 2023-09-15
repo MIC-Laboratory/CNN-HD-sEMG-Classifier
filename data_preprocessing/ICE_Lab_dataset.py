@@ -46,17 +46,23 @@ class ICE_Lab_dataset(Dataset):
         random.shuffle(data_indexes_list)
         self.data = self.data[data_indexes_list]
         self.label = self.label[data_indexes_list]
-        # Split the data and label based on the fold_order
-        fold_nodes = [i*(data_indexes//(fold+1)) for i in range(fold+1)]
         if train:
-            # Concatenate the data and label from the specified fold_order
-            self.data = np.concatenate(
-                (self.data[fold_nodes[0]:fold_nodes[fold_order]],self.data[fold_nodes[fold_order+1]:]))
-            self.label = np.concatenate(
-                (self.label[fold_nodes[0]:fold_nodes[fold_order]], self.label[fold_nodes[fold_order+1]:]))
+            self.data = self.data[:int(0.8*self.data.shape[0])]
+            self.label = self.label[:int(0.8*self.label.shape[0])]
         else:
-            self.data = self.data[fold_nodes[fold_order]:fold_nodes[fold_order+1]]
-            self.label = self.label[fold_nodes[fold_order]:fold_nodes[fold_order+1]]
+            self.data = self.data[int(0.8*self.data.shape[0]):]
+            self.label = self.label[int(0.8*self.label.shape[0]):]
+        # Split the data and label based on the fold_order
+        # fold_nodes = [i*(data_indexes//(fold+1)) for i in range(fold+1)]
+        # if train:
+        #     # Concatenate the data and label from the specified fold_order
+        #     self.data = np.concatenate(
+        #         (self.data[fold_nodes[0]:fold_nodes[fold_order]],self.data[fold_nodes[fold_order+1]:]))
+        #     self.label = np.concatenate(
+        #         (self.label[fold_nodes[0]:fold_nodes[fold_order]], self.label[fold_nodes[fold_order+1]:]))
+        # else:
+        #     self.data = self.data[fold_nodes[fold_order]:fold_nodes[fold_order+1]]
+        #     self.label = self.label[fold_nodes[fold_order]:fold_nodes[fold_order+1]]
 
     def __len__(self):
         """
@@ -65,7 +71,7 @@ class ICE_Lab_dataset(Dataset):
         Returns:
             int: The number of samples in the dataset.
         """
-        return len(self.data)
+        return self.data.shape[0]
 
     def __getitem__(self, idx):
         """
