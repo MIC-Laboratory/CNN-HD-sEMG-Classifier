@@ -50,25 +50,21 @@ testing_dataloaders = []
 
 # Iterate over each fold
 
-for fold in tqdm(range(config["fold"]),desc="Proessing K fold"):
 
-    # Create training and testing datasets for the current fold
+# Create training and testing datasets for the current fold
 
-    training_dataset = dataset(root=root,width=config["input_width"],
-                                    height=config["input_height"],fold=config["fold"],fold_order=fold,channel=config["channel"],train=True)
-    testing_dataset = dataset(root=root,width=config["input_width"],
-                                      height=config["input_height"], fold=config["fold"], fold_order=fold, channel=config["channel"], train=False)
+training_dataset = dataset(root=root,width=config["input_width"],
+                                height=config["input_height"],channel=config["channel"],train=True)
+testing_dataset = dataset(root=root,width=config["input_width"],
+                                    height=config["input_height"], channel=config["channel"], train=False)
 # Create training and testing dataloaders using the datasets
 
-    training_dataloader = DataLoader(
-        training_dataset, batch_size=config["batch_size"], shuffle=True, num_workers=config["num_workers"])
-    testing_dataloader = DataLoader(
-        testing_dataset, batch_size=config["batch_size"], shuffle=False, num_workers=config["num_workers"])
-    
-# Append the dataloaders to the respective lists
+training_dataloader = DataLoader(
+    training_dataset, batch_size=config["batch_size"], shuffle=True, num_workers=config["num_workers"])
+testing_dataloader = DataLoader(
+    testing_dataset, batch_size=config["batch_size"], shuffle=False, num_workers=config["num_workers"])
 
-    training_dataloaders.append(training_dataloader)
-    testing_dataloaders.append(testing_dataloader)
+
 
 # Initialize the MobileNetV1 model
 model = MobilenetV1(ch_in=training_dataset.channel,
@@ -195,6 +191,7 @@ def test(epoch,model,criterion,dataloader):
             for i, data in enumerate(dataloader, 0):
                 # Extract inputs and labels from the current batch
                 inputs, labels = data
+
                 # Prepare inputs and labels for computation on the appropriate device
                 labels = labels.type(torch.LongTensor)
                 inputs, labels = inputs.to(device), labels.to(device)
@@ -220,31 +217,27 @@ def test(epoch,model,criterion,dataloader):
 
 
 epochs = config["Epoch"]
-fold = 1
-train_acces = []
-test_acces = []
-#Iterate over the training and testing dataloaders for each fold
-for training_dataloader,testing_dataloader in zip(training_dataloaders,testing_dataloaders):
-    print(f"fold {fold} start")
-    fold += 1
-    # refresh the model weight
-    model.load_state_dict(model_orginal_weight)
-    for epoch in range(epochs):
-        
-        train_loss,train_acc = train(epoch,model,optimizer,criterion,training_dataloader)
-        test_loss,test_acc = test(epoch,model,criterion,testing_dataloader)
-        
 
-        if not os.path.isdir(config["model_save"]):
-            os.makedirs(config["model_save"])
-        if test_acc > best_acc:
-            best_acc = test_acc
-            torch.save(model.state_dict(),f"{config['model_save']}/MobilenetV1_Param@{params}_MAC@{macs}_Acc@{best_acc:.3f}.pt")
-            
-        scheduler.step()
-        epoch+=1
-    train_acces.append(train_acc)
-    test_acces.append(test_acc)
+#Iterate over the training and testing dataloaders for each fold
+
+
+    # refresh the model weight
+model.load_state_dict(model_orginal_weight)
+for epoch in range(epochs):
+    
+    train_loss,train_acc = train(epoch,model,optimizer,criterion,training_dataloader)
+    test_loss,test_acc = test(epoch,model,criterion,testing_dataloader)
+    
+
+    if not os.path.isdir(config["model_save"]):
+        os.makedirs(config["model_save"])
+    if test_acc > best_acc:
+        best_acc = test_acc
+        torch.save(model.state_dict(),f"{config['model_save']}/MobilenetV1_Param@{params}_MAC@{macs}_Acc@{best_acc:.3f}.pt")
+        
+    scheduler.step()
+    epoch+=1
+
 #Calculate the final average training and testing accuracies
 print(
     f"Final testing Acc:{sum(test_acces)/len(test_acces)} | Final training Acc:{sum(train_acces)/len(train_acces)}")

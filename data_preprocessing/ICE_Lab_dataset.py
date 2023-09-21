@@ -1,8 +1,10 @@
 from torch.utils.data import Dataset
 from matplotlib import pyplot as plt
+from sklearn.model_selection import train_test_split
 from utils.ICE_lab_data_preprocessing import ICE_lab_data_preprocessing as utils
 import numpy as np
 import random
+
 class ICE_Lab_dataset(Dataset):
     """
     Initialize the ICE_Lab_dataset class.
@@ -29,9 +31,8 @@ class ICE_Lab_dataset(Dataset):
         Raises:
         AssertionError: If fold_order is greater than or equal to fold.
     """
-    def __init__(self, root,width=8,height=24,train=False,channel=1,fold=2,fold_order=1):
+    def __init__(self, root,width=8,height=24,train=False,channel=1):
         
-        assert fold_order < fold, "fold_order has to be less than fold"
         self.root = root
         self.channel = channel
         self.width = width
@@ -40,29 +41,15 @@ class ICE_Lab_dataset(Dataset):
         self.data, self.label, self.num_classes = root[0],root[1],root[2]
         
         # # Shuffle the data and label indexes
-        data_indexes = self.data.shape[0] #self.data.shape = (1228800, 192)
-        random.seed(42)
-        data_indexes_list = [i for i in range(data_indexes)]
-        random.shuffle(data_indexes_list)
-        self.data = self.data[data_indexes_list]
-        self.label = self.label[data_indexes_list]
+        X_train, X_test, y_train, y_test = train_test_split(self.data, self.label, test_size=0.33, random_state=42)
         if train:
-            self.data = self.data[:int(0.8*self.data.shape[0])]
-            self.label = self.label[:int(0.8*self.label.shape[0])]
+            self.data = X_train
+            self.label = y_train
         else:
-            self.data = self.data[int(0.8*self.data.shape[0]):]
-            self.label = self.label[int(0.8*self.label.shape[0]):]
-        # Split the data and label based on the fold_order
-        # fold_nodes = [i*(data_indexes//(fold+1)) for i in range(fold+1)]
-        # if train:
-        #     # Concatenate the data and label from the specified fold_order
-        #     self.data = np.concatenate(
-        #         (self.data[fold_nodes[0]:fold_nodes[fold_order]],self.data[fold_nodes[fold_order+1]:]))
-        #     self.label = np.concatenate(
-        #         (self.label[fold_nodes[0]:fold_nodes[fold_order]], self.label[fold_nodes[fold_order+1]:]))
-        # else:
-        #     self.data = self.data[fold_nodes[fold_order]:fold_nodes[fold_order+1]]
-        #     self.label = self.label[fold_nodes[fold_order]:fold_nodes[fold_order+1]]
+            self.data = X_test
+            self.label = y_test
+
+        
 
     def __len__(self):
         """
@@ -85,10 +72,8 @@ class ICE_Lab_dataset(Dataset):
         """
         data = self.data[idx]
         label = self.label[idx].astype(int)
-        data = self.utils.NormalizeData(data)
-
-        
         data = data.reshape(self.channel,self.width,self.height)
-
         data = data.astype("float32")
+        
+        
         return data,label
