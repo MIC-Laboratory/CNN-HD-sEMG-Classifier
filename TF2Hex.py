@@ -1,10 +1,4 @@
-import torch
-import tensorflow as tf
-import onnx
-import numpy as np
-import os
 import binascii
-from onnxsim import simplify
 import numpy as np
 
 def convert_to_c_array(bytes) -> str:
