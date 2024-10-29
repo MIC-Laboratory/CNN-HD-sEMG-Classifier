@@ -83,6 +83,7 @@ One of those gestures is an “idle” gesture, which was repeated for 30 trials
 | model_width | Mobilenet block expansion radio, the less he number, the lower the computation and storage usuage       |    A float in [0.0, 1.0] |
 
 ### Dependency
+- python==3.11
 - absl_py==1.1.0
 - chartio==6.0.1
 - flatbuffers==23.5.26

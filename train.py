@@ -3,8 +3,8 @@
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from data_preprocessing import ICE_Lab_dataset
-# from models.mobilenetv2 import MobileNetV2
-from models.mobilenetv1 import MobilenetV1
+from sklearn.model_selection import train_test_split
+from models.M5 import M5
 from ptflops import get_model_complexity_info
 import torch
 import torch.nn as nn
@@ -33,30 +33,25 @@ elif config["dataset"] == "ICE":
     from utils.ICE_lab_data_preprocessing import ICE_lab_data_preprocessing as utils
 
     # Extract additional data, labels, and number of classes using ICE data preprocessing utility
-    data,label,num_classes = utils().extra_data(config["data_path"])
+    data,label,num_classes = utils().extra_data(config["data_path"],config["input_time_window"])
+    X_train, X_test, y_train, y_test = train_test_split(data,label, test_size=0.33, random_state=42)
 
     # Assign the data path from 'config' to 'root' for further usage
-    root = (data, label, num_classes)
+    training_data = (X_train, y_train, num_classes)
+    testing_data = (X_test, y_test, num_classes)
 else:
 
     # Raise an exception if the specified dataset in 'config' is not implemented
 
     raise NotImplementedError
 
-# Initialize lists for training and testing dataloaders
-
-training_dataloaders = []
-testing_dataloaders = []
-
-# Iterate over each fold
-
 
 # Create training and testing datasets for the current fold
 
-training_dataset = dataset(root=root,width=config["input_width"],
-                                height=config["input_height"],channel=config["channel"],train=True)
-testing_dataset = dataset(root=root,width=config["input_width"],
-                                    height=config["input_height"], channel=config["channel"], train=False)
+training_dataset = dataset(data=training_data,num_sensor=config["input_sensor"],
+                                channel=config["channel"])
+testing_dataset = dataset(data=testing_data,num_sensor=config["input_sensor"],
+                                    channel=config["channel"])
 # Create training and testing dataloaders using the datasets
 
 training_dataloader = DataLoader(
@@ -67,9 +62,7 @@ testing_dataloader = DataLoader(
 
 
 # Initialize the MobileNetV1 model
-model = MobilenetV1(ch_in=training_dataset.channel,
-                    n_classes=training_dataset.num_classes,
-                    Global_ratio=config["model_width"])
+model = M5(num_classes=training_dataset.num_classes)
 # model = MobileNetV2(input_layer=training_dataset.channel,num_classes=training_dataset.num_classes,model_width=config["model_width"])
 
 # Set the device to use (GPU if available, otherwise CPU)
@@ -79,31 +72,20 @@ model.to(device)
 # Calculating the flops and parameters for the model
 
 
-macs, params = get_model_complexity_info(model, (1, 8, 24), as_strings=True,
+macs, params = get_model_complexity_info(model, (1, config["input_sensor"]*config["input_time_window"]), as_strings=True,
                                         print_per_layer_stat=False, verbose=False)
-macs = '{:<8}'.format( macs)
-params = '{:<8}'.format( params)
+macs = '{:<8}'.format( macs).replace(" ", "")
+params = '{:<8}'.format( params).replace(" ", "")
 
 
 
 # Define the optimizer, loss criterion, and scheduler
 
-optimizer = torch.optim.AdamW(model.parameters(), lr=config["learning_rate"],weight_decay=config["weight_decay"])
+optimizer = torch.optim.AdamW(model.parameters(), lr=config["learning_rate"])
 criterion = nn.CrossEntropyLoss(label_smoothing=config["label_smoothing"])
 scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer,T_max=config["T_max"])
-model_orginal_weight = model.state_dict().copy()
 
 
-if config["finetune"]:
-    model.load_state_dict(torch.load(config["pretrain_model_path"]),strict=False)
-    # frezze the first couple layer for funeting
-    for conv1_param in model.conv1.parameters():
-        conv1_param.requires_grad = False
-    for bn1_param in model.bn1.parameters():
-        bn1_param.requires_grad = False
-    for block0_param in model.layers[0].parameters():
-        block0_param.requires_grad = False
-    model_orginal_weight = model.state_dict().copy()
 
 # Initialize variables to track the best accuracy achieved
 
@@ -218,11 +200,6 @@ def test(epoch,model,criterion,dataloader):
 
 epochs = config["Epoch"]
 
-#Iterate over the training and testing dataloaders for each fold
-
-
-    # refresh the model weight
-model.load_state_dict(model_orginal_weight)
 for epoch in range(epochs):
     
     train_loss,train_acc = train(epoch,model,optimizer,criterion,training_dataloader)
@@ -233,11 +210,7 @@ for epoch in range(epochs):
         os.makedirs(config["model_save"])
     if test_acc > best_acc:
         best_acc = test_acc
-        torch.save(model.state_dict(),f"{config['model_save']}/MobilenetV1_Param@{params}_MAC@{macs}_Acc@{best_acc:.3f}.pt")
+        torch.save(model.state_dict(),f"{config['model_save']}/{type(model).__name__}_Param@{params}_MAC@{macs}_Acc@{best_acc:.3f}.pt")
         
     scheduler.step()
     epoch+=1
-
-#Calculate the final average training and testing accuracies
-print(
-    f"Final testing Acc:{sum(test_acces)/len(test_acces)} | Final training Acc:{sum(train_acces)/len(train_acces)}")

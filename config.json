@@ -1,19 +1,16 @@
 {
     
-    "Epoch":30,
-    "learning_rate":3e-4,
-    "T_max":5,
-    "input_width":8,
-    "input_height":24,
+    "Epoch":100,
+    "learning_rate":0.01,
+    "T_max":100,
+    "input_sensor":192,
+    "input_time_window":20,
     "batch_size":1000,
     "num_workers":0,
-    "data_path":"data/Training_Trimmed", 
+    "data_path":"data", 
     "dataset":"ICE", 
     "channel":1,
     "weight_decay":3e-4,
     "label_smoothing":0.1,
-    "model_save":"pretrain_model",
-    "finetune":false,
-    "pretrain_model_path":".",
-    "model_width":0.3
+    "model_save":"pretrain_model"
 }

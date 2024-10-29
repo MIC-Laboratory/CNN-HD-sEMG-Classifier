@@ -11,43 +11,26 @@ class ICE_Lab_dataset(Dataset):
 
     Args:
         root (tuple): Tuple containing data, label, and num_classes.
-        width (int): Width of the data.
-        height (int): Height of the data.
-        train (bool): Flag indicating whether to use training or testing data.
+        num_sensor (int): Number of sensors: 192.
+
         channel (int): Number of channels in the data.
-        fold (int): Number of data folds for splitting the dataset.
-        fold_order (int): The order of the fold to be used.
 
     Attributes:
         root (str): Root directory of the dataset.
         channel (int): Number of channels in the data.
-        width (int): Width of the data.
-        height (int): Height of the data.
+        num_sensor (int): Number of sensors: 192.
         utils (object): An instance of the utils class for data processing.
         data (numpy.ndarray): The loaded data from the dataset.
         label (numpy.ndarray): The corresponding labels for the data.
         num_classes (int): The number of classes in the dataset.
-        
-        Raises:
-        AssertionError: If fold_order is greater than or equal to fold.
     """
-    def __init__(self, root,width=8,height=24,train=False,channel=1):
+    def __init__(self, data,num_sensor,channel=1):
         
-        self.root = root
+        self.data = data
         self.channel = channel
-        self.width = width
-        self.height = height
+        self.num_sensor = num_sensor
         self.utils = utils()
-        self.data, self.label, self.num_classes = root[0],root[1],root[2]
-        
-        # # Shuffle the data and label indexes
-        X_train, X_test, y_train, y_test = train_test_split(self.data, self.label, test_size=0.33, random_state=42)
-        if train:
-            self.data = X_train
-            self.label = y_train
-        else:
-            self.data = X_test
-            self.label = y_test
+        self.data, self.label, self.num_classes = data[0],data[1],data[2]
 
         
 
@@ -72,7 +55,7 @@ class ICE_Lab_dataset(Dataset):
         """
         data = self.data[idx]
         label = self.label[idx].astype(int)
-        data = data.reshape(self.channel,self.width,self.height)
+        data = data.reshape(self.channel,self.num_sensor,-1)
         data = data.astype("float32")
         
         
